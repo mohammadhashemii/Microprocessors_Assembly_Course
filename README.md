@@ -1,6 +1,6 @@
 # Microprocessor & Assembly language - HW#1
 
-This repo contains some programs written in assembly language. They are simple and well-documented.
+This repo contains some programs written in assembly language. They are simple but well-documented.
 
 
 
