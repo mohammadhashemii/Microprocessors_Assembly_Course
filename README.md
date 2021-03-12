@@ -4,7 +4,7 @@ This repo contains some programs written in assembly language. They are simple b
 
 
 
-Q1. 32bit multipication.
+Q1. 32-BIT MULTIPICATION.
 
 Q2. A PROGRAM TO STORE THE FIRST n PRIME NUMBERS IN NA ARRAY.
 
