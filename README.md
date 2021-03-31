@@ -1,24 +1,10 @@
 # Microprocessors & Assembly Language Course Projects
 
-<<<<<<< HEAD
-=======
-This repo contains some programs written in assembly language. They are simple but well-documented.
+This repo contains the materials and projects of the Microprocessor & Assembly Course.
 
+## Repo Contents 
 
-
-Q1. 32-BIT MULTIPICATION.
-
-Q2. A PROGRAM TO STORE THE FIRST n PRIME NUMBERS IN NA ARRAY.
-
-Q3.a. A PROGRAM TO CONVERT BCD TO HEX AND THEN CALCULATE A REMAINDER OF A TWO 16-BIT DIVISION.
- 
-Q3.b. A PROGRAM TO CONVERT STRING TO NUMBER AND THEN CALCULATE A REMAINDER OF A DIVISION.
- 
-
-Q4. A PROGRAM TO SUM OVER ALL THE ODD NUMBERS OF A SERIES.
-
-Q5. A PROGRAM TO COMPUTE THE FACTORIAL OF INTEGER n USING RECURSIVE PROCEDURE
->>>>>>> c419b30ab927dbfb83ec7e84c1d1d3e5f35824a7
-
-
-
+| Folder | Description |
+|--|--|
+| [*Project#2/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-2) | Contains some elementary 8086 code which are neccessary to learn for everyone new to Assembly. |
+| [*Project#3/*](https://github.com/ibro45/Language-Identification-Speech/tree/master/tensorflow) | TETRIS game implemented by 8086.|
