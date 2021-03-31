@@ -1,21 +1,5 @@
-# Microprocessor & Assembly language - HW#1
+# Microprocessors & Assembly Language Course Projects
 
-This repo contains some programs written in assembly language. They are simple and well-documented.
-
-
-
-Q1. 32bit multipication.
-
-Q2. A PROGRAM TO STORE THE FIRST n PRIME NUMBERS IN NA ARRAY.
-
-Q3.a. A PROGRAM TO CONVERT BCD TO HEX AND THEN CALCULATE A REMAINDER OF A TWO 16-BIT DIVISION.
- 
-Q3.b. A PROGRAM TO CONVERT STRING TO NUMBER AND THEN CALCULATE A REMAINDER OF A DIVISION.
- 
-
-Q4. A PROGRAM TO SUM OVER ALL THE ODD NUMBERS OF A SERIES.
-
-Q5. A PROGRAM TO COMPUTE THE FACTORIAL OF INTEGER n USING RECURSIVE PROCEDURE
 
 
 
