@@ -4,7 +4,7 @@ This project was the third project of the Microprocessor and assembly language c
 
 ![](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/blob/master/Project-3/sample.gif)
 
-# Model : How to Run
+# How to Run
 
 Emulator [emu8086](https://download.cnet.com/Emu8086-Microprocessor-Emulator/3000-2069_4-10392690.html) was used for this project to test the source code. `Open TETRIS.asm` using this emulator and click *compile* to generate `TETRIS.com` file.
 
