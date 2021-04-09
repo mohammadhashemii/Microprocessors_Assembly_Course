@@ -6,7 +6,7 @@ This project was the third project of the Microprocessor and assembly language c
 
 # How to Run
 
-Emulator [emu8086](https://download.cnet.com/Emu8086-Microprocessor-Emulator/3000-2069_4-10392690.html) was used for this project to test the source code. `Open TETRIS.asm` using this emulator and click *compile* to generate `TETRIS.com` file.
+Emulator [emu8086](https://download.cnet.com/Emu8086-Microprocessor-Emulator/3000-2069_4-10392690.html) was used for this project to test the source code. Open `TETRIS.asm` using this emulator and click *compile* to generate `TETRIS.com` file.
 
 Then you will need [DOSBOX](https://www.dosbox.com/download.php?main=1) to execute this file.
 
