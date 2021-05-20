@@ -10,5 +10,6 @@ This repo contains the materials and projects of the Microprocessor & Assembly C
 | [*Project#3/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-3) | TETRIS game implemented by 8086.|
 | [*Project#4/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-4) | Frequency meter simulation in Proteus.|
 | [*Project#5/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-5) | ARM assembly basic programs.|
+| [*Project#6/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-6) | Elevator simulation in Proteus.|
 
 
