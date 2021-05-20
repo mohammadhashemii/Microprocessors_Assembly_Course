@@ -1,0 +1,650 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ;Addresses
+    2 00000000         ;-------------------------------------
+    3 00000000         ; Clock
+    4 00000000 40023830 
+                       RCC_AHB1ENR
+                               EQU              0x40023830
+    5 00000000         
+    6 00000000         ; GPIOA - Base Addr: 0x4002 0000
+    7 00000000 40020000 
+                       GPIOA_MODER
+                               EQU              0x40020000
+    8 00000000 40030010 
+                       GPIOA_IDR
+                               EQU              0x40030010
+    9 00000000 40020014 
+                       GPIOA_ODR
+                               EQU              0x40020014
+   10 00000000         
+   11 00000000         ; GPIOB - Base Addr: 0x4002 0400
+   12 00000000 40020400 
+                       GPIOB_MODER
+                               EQU              0x40020400
+   13 00000000 40020410 
+                       GPIOB_IDR
+                               EQU              0x40020410
+   14 00000000 40020414 
+                       GPIOB_ODR
+                               EQU              0x40020414
+   15 00000000         
+   16 00000000         ; GPIOC - Base Addr: 0x4002 0800
+   17 00000000 40020800 
+                       GPIOC_MODER
+                               EQU              0x40020800
+   18 00000000 40020810 
+                       GPIOC_IDR
+                               EQU              0x40020810
+   19 00000000 40020814 
+                       GPIOC_ODR
+                               EQU              0x40020814
+   20 00000000         
+   21 00000000         ;-------------------------------------
+   22 00000000         
+   23 00000000         
+   24 00000000                 EXPORT           SystemInit
+   25 00000000                 EXPORT           __main
+   26 00000000         
+   27 00000000                 AREA             Mycode, CODE, READONLY
+   28 00000000         
+   29 00000000         SystemInit
+                               FUNCTION
+   30 00000000         
+   31 00000000         ; Enable clk FOR portA, portB AND portC
+   32 00000000 497B            LDR              R1, =RCC_AHB1ENR
+   33 00000002 F04F 0007       MOV              R0, #0x7    ; =000...0111
+   34 00000006 6008            STR              R0, [R1]
+   35 00000008         
+   36 00000008         ; GPIOA MODER
+   37 00000008 497A            LDR              R1, =GPIOA_MODER
+   38 0000000A 6808            LDR              R0, [R1]
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   39 0000000C F04F 3055       MOV              R0, #0x55555555 
+                                                            ; =010101...0101
+   40 00000010 6008            STR              R0, [R1]
+   41 00000012         
+   42 00000012         ; GPIOB MODER
+   43 00000012 4979            LDR              R1, =GPIOB_MODER
+   44 00000014 6808            LDR              R0, [R1]
+   45 00000016 F04F 2055       MOV              R0, #0x55005500
+   46 0000001A 6008            STR              R0, [R1]
+   47 0000001C         
+   48 0000001C         ; GPIOC MODER
+   49 0000001C 4977            LDR              R1, =GPIOC_MODER
+   50 0000001E 6808            LDR              R0, [R1]
+   51 00000020 F04F 0055       MOV              R0, #0x00000055
+   52 00000024 6008            STR              R0, [R1]
+   53 00000026         
+   54 00000026                 ENDFUNC
+   55 00000026         __main  FUNCTION
+   56 00000026         
+   57 00000026 F04F 0600       MOV              R6, #0      ; A flag
+   58 0000002A         
+   59 0000002A         MAIN_LOOP
+   60 0000002A         
+   61 0000002A         ;-------------------------------------
+   62 0000002A         ; Check if the reset button is pressed 
+   63 0000002A 4975            LDR              R1, =GPIOB_IDR
+   64 0000002C 6808            LDR              R0, [R1]
+   65 0000002E 4601            MOV              R1, R0
+   66 00000030         
+   67 00000030 F64F 72F7       MOV              R2, #0xFFF7 ; 1111 1111 1111 01
+                                                            11
+   68 00000034 EA40 0002       ORR              R0, R0, R2
+   69 00000038 4290            CMP              R0, R2
+   70 0000003A D073            BEQ              RESET
+   71 0000003C         ;-------------------------------------
+   72 0000003C         
+   73 0000003C         
+   74 0000003C         ;-------------------------------------
+   75 0000003C         ;First row in keypad enable
+   76 0000003C 4A71            LDR              R2, =GPIOB_ODR
+   77 0000003E F64E 73FF       MOV              R3, #0xEFFF ; =1110 1111 1111 1
+                                                            111
+   78 00000042 6013            STR              R3, [R2]
+   79 00000044         
+   80 00000044 4A6E            LDR              R2, =GPIOB_IDR
+   81 00000046 6810            LDR              R0, [R2]
+   82 00000048 4601            MOV              R1, R0
+   83 0000004A         ; Chech if 1 is pressed
+   84 0000004A F64F 64FF       MOV              R4, #0xFEFF ; =1111 1110 1111 1
+                                                            111
+   85 0000004E EA40 0004       ORR              R0, R0, R4
+   86 00000052 42A0            CMP              R0, R4
+   87 00000054 F04F 0001       MOV              R0, #1
+   88 00000058 D06D            BEQ              DISPLAY_7SEG
+   89 0000005A         ;Check if 2 is pressed
+   90 0000005A F64F 54FF       MOV              R4, #0xFDFF ; =1111 1101 1111 1
+                                                            111
+   91 0000005E 460B            MOV              R3, R1
+   92 00000060 EA43 0304       ORR              R3, R3, R4
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   93 00000064 42A3            CMP              R3, R4
+   94 00000066 F04F 0002       MOV              R0, #2
+   95 0000006A D064            BEQ              DISPLAY_7SEG
+   96 0000006C         ;Check if 3 is pressed
+   97 0000006C F64F 34FF       MOV              R4, #0xFBFF ; =1111 1011 1111 1
+                                                            111
+   98 00000070 460D            MOV              R5, R1
+   99 00000072 EA45 0504       ORR              R5, R5, R4
+  100 00000076 42A5            CMP              R5, R4
+  101 00000078 F04F 0003       MOV              R0, #3
+  102 0000007C D05B            BEQ              DISPLAY_7SEG
+  103 0000007E         ;-------------------------------------
+  104 0000007E         
+  105 0000007E         
+  106 0000007E         ;-------------------------------------
+  107 0000007E         ;Second row in keypad enable
+  108 0000007E 4A61            LDR              R2, =GPIOB_ODR
+  109 00000080 F64D 73FF       MOV              R3, #0xDFFF ; =1101 1111 1111 1
+                                                            111
+  110 00000084 6013            STR              R3, [R2]
+  111 00000086         
+  112 00000086 4A5E            LDR              R2, =GPIOB_IDR
+  113 00000088 6810            LDR              R0, [R2]
+  114 0000008A 4601            MOV              R1, R0
+  115 0000008C         ; Chech if 4 is pressed
+  116 0000008C F64F 64FF       MOV              R4, #0xFEFF ; =1111 1110 1111 1
+                                                            111
+  117 00000090 EA40 0004       ORR              R0, R0, R4
+  118 00000094 42A0            CMP              R0, R4
+  119 00000096 F04F 0004       MOV              R0, #4
+  120 0000009A D04C            BEQ              DISPLAY_7SEG
+  121 0000009C         ;Check if 5 is pressed
+  122 0000009C F64F 54FF       MOV              R4, #0xFDFF ; =1111 1101 1111 1
+                                                            111
+  123 000000A0 460B            MOV              R3, R1
+  124 000000A2 EA43 0304       ORR              R3, R3, R4
+  125 000000A6 42A3            CMP              R3, R4
+  126 000000A8 F04F 0005       MOV              R0, #5
+  127 000000AC D043            BEQ              DISPLAY_7SEG
+  128 000000AE         ;Check if 6 is pressed
+  129 000000AE F64F 34FF       MOV              R4, #0xFBFF ; =1111 1011 1111 1
+                                                            111
+  130 000000B2 460D            MOV              R5, R1
+  131 000000B4 EA45 0504       ORR              R5, R5, R4
+  132 000000B8 42A5            CMP              R5, R4
+  133 000000BA F04F 0006       MOV              R0, #6
+  134 000000BE D03A            BEQ              DISPLAY_7SEG
+  135 000000C0         ;-------------------------------------
+  136 000000C0         
+  137 000000C0         ;-------------------------------------
+  138 000000C0         ;Third row in keypad enable
+  139 000000C0 4A50            LDR              R2, =GPIOB_ODR
+  140 000000C2 F64B 73FF       MOV              R3, #0xBFFF ; =1011 1111 1111 1
+                                                            111
+  141 000000C6 6013            STR              R3, [R2]
+  142 000000C8         
+  143 000000C8 4A4D            LDR              R2, =GPIOB_IDR
+  144 000000CA 6810            LDR              R0, [R2]
+  145 000000CC 4601            MOV              R1, R0
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  146 000000CE         ; Chech if 7 is pressed
+  147 000000CE F64F 64FF       MOV              R4, #0xFEFF ; =1111 1110 1111 1
+                                                            111
+  148 000000D2 EA40 0004       ORR              R0, R0, R4
+  149 000000D6 42A0            CMP              R0, R4
+  150 000000D8 F04F 0007       MOV              R0, #7
+  151 000000DC D02B            BEQ              DISPLAY_7SEG
+  152 000000DE         ;Check if 8 is pressed
+  153 000000DE F64F 54FF       MOV              R4, #0xFDFF ; =1111 1101 1111 1
+                                                            111
+  154 000000E2 460B            MOV              R3, R1
+  155 000000E4 EA43 0304       ORR              R3, R3, R4
+  156 000000E8 42A3            CMP              R3, R4
+  157 000000EA F04F 0008       MOV              R0, #8
+  158 000000EE D022            BEQ              DISPLAY_7SEG
+  159 000000F0         ;Check if 9 is pressed
+  160 000000F0 F64F 34FF       MOV              R4, #0xFBFF ; =1111 1011 1111 1
+                                                            111
+  161 000000F4 460D            MOV              R5, R1
+  162 000000F6 EA45 0504       ORR              R5, R5, R4
+  163 000000FA 42A5            CMP              R5, R4
+  164 000000FC F04F 0009       MOV              R0, #9
+  165 00000100 D019            BEQ              DISPLAY_7SEG
+  166 00000102         ;-------------------------------------
+  167 00000102         
+  168 00000102         ;-------------------------------------
+  169 00000102         ;Fourth row in keypad enable
+  170 00000102 4A40            LDR              R2, =GPIOB_ODR
+  171 00000104 F647 73FF       MOV              R3, #0x7FFF ; =0111 1111 1111 1
+                                                            111
+  172 00000108 6013            STR              R3, [R2]
+  173 0000010A         
+  174 0000010A 4A3D            LDR              R2, =GPIOB_IDR
+  175 0000010C 6810            LDR              R0, [R2]
+  176 0000010E 4601            MOV              R1, R0
+  177 00000110         
+  178 00000110         ;Check if 0 is pressed
+  179 00000110 F64F 54FF       MOV              R4, #0xFDFF ; =1111 1101 1111 1
+                                                            111
+  180 00000114 460B            MOV              R3, R1
+  181 00000116 EA43 0304       ORR              R3, R3, R4
+  182 0000011A 42A3            CMP              R3, R4
+  183 0000011C F04F 0000       MOV              R0, #0
+  184 00000120 D009            BEQ              DISPLAY_7SEG
+  185 00000122         
+  186 00000122 E782            B                MAIN_LOOP
+  187 00000124         
+  188 00000124         ;-------------------------------------
+  189 00000124         RESET
+  190 00000124 4938            LDR              R1, =GPIOA_ODR
+  191 00000126 F04F 0000       MOV              R0, #0
+  192 0000012A 6008            STR              R0, [R1]
+  193 0000012C F04F 0600       MOV              R6, #0
+  194 00000130 F04F 0700       MOV              R7, #0
+  195 00000134         ;------------------------------------- 
+  196 00000134         
+  197 00000134 E779            B                MAIN_LOOP
+  198 00000136         
+  199 00000136         DISPLAY_7SEG
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  200 00000136         ; R0 should contain the expected value to be displayed
+  201 00000136 EA4F 3000       LSL              R0, R0, #12 ; R0 = R0 * 1000 (i
+                                                            n decimal)
+  202 0000013A 4933            LDR              R1, =GPIOA_ODR
+  203 0000013C 6008            STR              R0, [R1]
+  204 0000013E 4287            CMP              R7, R0
+  205 00000140 F43F AF73       BEQ              MAIN_LOOP
+  206 00000144 2E01            CMP              R6, #1
+  207 00000146 D003            BEQ              COUNTER
+  208 00000148 F04F 0601       MOV              R6, #1
+  209 0000014C 4607            MOV              R7, R0      ; R7 = source
+  210 0000014E E76C            B                MAIN_LOOP
+  211 00000150         
+  212 00000150         
+  213 00000150         COUNTER
+  214 00000150         ; R0 should contain destination level
+  215 00000150         ; R7 should contain source level
+  216 00000150 EA4F 3610       LSR              R6, R0, #12
+  217 00000154 EA4F 3517       LSR              R5, R7, #12
+  218 00000158         
+  219 00000158 F04F 080C       MOV              R8, #12
+  220 0000015C F04F 0A00       MOV              R10 , #0    ; A flag
+  221 00000160 F04F 0B01       MOV              R11, #1     ; for LED index
+  222 00000164 F04F 0C00       MOV              R12, #0
+  223 00000168 42AE            CMP              R6, R5
+  224 0000016A DC01            BGT              COUNTER_LOOP
+  225 0000016C F04F 0C01       MOV              R12, #1
+  226 00000170         
+  227 00000170         COUNTER_LOOP
+  228 00000170         ;-------------------------------------
+  229 00000170         ; Check if the reset button is pressed 
+  230 00000170 4923            LDR              R1, =GPIOB_IDR
+  231 00000172 680B            LDR              R3, [R1]
+  232 00000174 4619            MOV              R1, R3
+  233 00000176         
+  234 00000176 F64F 72F7       MOV              R2, #0xFFF7 ; 1111 1111 1111 01
+                                                            11
+  235 0000017A EA43 0302       ORR              R3, R3, R2
+  236 0000017E 4293            CMP              R3, R2
+  237 00000180 D0D0            BEQ              RESET
+  238 00000182         ;-------------------------------------
+  239 00000182         
+  240 00000182         ;-------------------------------------
+  241 00000182         ; Wait loop
+  242 00000182 4C22            LDR              R4, =0x3FFFFF ; delay time
+  243 00000184         WAIT
+  244 00000184 2C00            CMP              R4, #0
+  245 00000186 D002            BEQ              START
+  246 00000188 F1A4 0401       SUB              R4, R4, #1
+  247 0000018C E7FA            B                WAIT
+  248 0000018E         ;-------------------------------------
+  249 0000018E         
+  250 0000018E         START
+  251 0000018E F1BC 0F01       CMP              R12, #1
+  252 00000192 D00A            BEQ              L2          ; if destination < 
+                                                            source
+  253 00000194         
+  254 00000194         L1
+  255 00000194 42B5            CMP              R5, R6
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  256 00000196 DC2B            BGT              END_LOOP
+  257 00000198 FA05 F908       LSL              R9, R5, R8
+  258 0000019C EA47 0709       ORR              R7, R7, R9
+  259 000001A0 F105 0501       ADD              R5, R5, #1
+  260 000001A4 F1A8 0804       SUB              R8, R8, #4
+  261 000001A8 E009            B                DISPLAY
+  262 000001AA         
+  263 000001AA         L2
+  264 000001AA 42B5            CMP              R5, R6
+  265 000001AC DB20            BLT              END_LOOP
+  266 000001AE FA05 F908       LSL              R9, R5, R8
+  267 000001B2 EA47 0709       ORR              R7, R7, R9
+  268 000001B6 F1A5 0501       SUB              R5, R5, #1
+  269 000001BA F1A8 0804       SUB              R8, R8, #4
+  270 000001BE         
+  271 000001BE         DISPLAY
+  272 000001BE         ; DISPLAY ON 7-SEGMENT
+  273 000001BE 4912            LDR              R1, =GPIOA_ODR
+  274 000001C0 600F            STR              R7, [R1]
+  275 000001C2         
+  276 000001C2         ;-------------------------------------
+  277 000001C2         ; TURN THE CORRESPONDING LED ON
+  278 000001C2 4913            LDR              R1, =GPIOC_ODR
+  279 000001C4 F8C1 B000       STR              R11, [R1]
+  280 000001C8 EA4F 0B4B       LSL              R11, R11, #1
+  281 000001CC         ;-------------------------------------
+  282 000001CC         
+  283 000001CC F1B8 0F00       CMP              R8, #0
+  284 000001D0 DCCE            BGT              COUNTER_LOOP
+  285 000001D2 F1BA 0F01       CMP              R10, #1
+  286 000001D6 D002            BEQ              MOVE_LEFT
+  287 000001D8 F04F 0A01       MOV              R10, #1
+  288 000001DC E7C8            B                COUNTER_LOOP
+  289 000001DE         MOVE_LEFT
+  290 000001DE F04F 080C       MOV              R8, #12
+  291 000001E2 F04F 0700       MOV              R7, #0
+  292 000001E6 F04F 0A00       MOV              R10, #0
+  293 000001EA F04F 0B01       MOV              R11, #1
+  294 000001EE E7BF            B                COUNTER_LOOP
+  295 000001F0         END_LOOP
+  296 000001F0         
+  297 000001F0                 ENDFUNC
+  298 000001F0         
+                       
+              40023830 
+              40020000 
+              40020400 
+              40020800 
+              40020410 
+              40020414 
+              40020014 
+              003FFFFF 
+              40020814 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
+interwork --depend=.\objects\gpio.d -o.\objects\gpio.o -I.\RTE\_Target_1 -IC:\U
+sers\Ehsan\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.15.0\Drivers\CMSIS\Devi
+ce\ST\STM32F4xx\Include -IC:\Keil_v5\ARM\CMSIS\Include --predefine="__EVAL SETA
+ 1" --predefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --prede
+fine="STM32F401xE SETA 1" --list=.\listings\gpio.lst GPIO.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+COUNTER 00000150
+
+Symbol: COUNTER
+   Definitions
+      At line 213 in file GPIO.s
+   Uses
+      At line 207 in file GPIO.s
+Comment: COUNTER used once
+COUNTER_LOOP 00000170
+
+Symbol: COUNTER_LOOP
+   Definitions
+      At line 227 in file GPIO.s
+   Uses
+      At line 224 in file GPIO.s
+      At line 284 in file GPIO.s
+      At line 288 in file GPIO.s
+      At line 294 in file GPIO.s
+
+DISPLAY 000001BE
+
+Symbol: DISPLAY
+   Definitions
+      At line 271 in file GPIO.s
+   Uses
+      At line 261 in file GPIO.s
+Comment: DISPLAY used once
+DISPLAY_7SEG 00000136
+
+Symbol: DISPLAY_7SEG
+   Definitions
+      At line 199 in file GPIO.s
+   Uses
+      At line 88 in file GPIO.s
+      At line 95 in file GPIO.s
+      At line 102 in file GPIO.s
+      At line 120 in file GPIO.s
+      At line 127 in file GPIO.s
+      At line 134 in file GPIO.s
+      At line 151 in file GPIO.s
+      At line 158 in file GPIO.s
+      At line 165 in file GPIO.s
+      At line 184 in file GPIO.s
+
+END_LOOP 000001F0
+
+Symbol: END_LOOP
+   Definitions
+      At line 295 in file GPIO.s
+   Uses
+      At line 256 in file GPIO.s
+      At line 265 in file GPIO.s
+
+L1 00000194
+
+Symbol: L1
+   Definitions
+      At line 254 in file GPIO.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      None
+Comment: L1 unused
+L2 000001AA
+
+Symbol: L2
+   Definitions
+      At line 263 in file GPIO.s
+   Uses
+      At line 252 in file GPIO.s
+Comment: L2 used once
+MAIN_LOOP 0000002A
+
+Symbol: MAIN_LOOP
+   Definitions
+      At line 59 in file GPIO.s
+   Uses
+      At line 186 in file GPIO.s
+      At line 197 in file GPIO.s
+      At line 205 in file GPIO.s
+      At line 210 in file GPIO.s
+
+MOVE_LEFT 000001DE
+
+Symbol: MOVE_LEFT
+   Definitions
+      At line 289 in file GPIO.s
+   Uses
+      At line 286 in file GPIO.s
+Comment: MOVE_LEFT used once
+Mycode 00000000
+
+Symbol: Mycode
+   Definitions
+      At line 27 in file GPIO.s
+   Uses
+      None
+Comment: Mycode unused
+RESET 00000124
+
+Symbol: RESET
+   Definitions
+      At line 189 in file GPIO.s
+   Uses
+      At line 70 in file GPIO.s
+      At line 237 in file GPIO.s
+
+START 0000018E
+
+Symbol: START
+   Definitions
+      At line 250 in file GPIO.s
+   Uses
+      At line 245 in file GPIO.s
+Comment: START used once
+SystemInit 00000000
+
+Symbol: SystemInit
+   Definitions
+      At line 29 in file GPIO.s
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+   Uses
+      At line 24 in file GPIO.s
+Comment: SystemInit used once
+WAIT 00000184
+
+Symbol: WAIT
+   Definitions
+      At line 243 in file GPIO.s
+   Uses
+      At line 247 in file GPIO.s
+Comment: WAIT used once
+__main 00000026
+
+Symbol: __main
+   Definitions
+      At line 55 in file GPIO.s
+   Uses
+      At line 25 in file GPIO.s
+Comment: __main used once
+15 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+GPIOA_IDR 40030010
+
+Symbol: GPIOA_IDR
+   Definitions
+      At line 8 in file GPIO.s
+   Uses
+      None
+Comment: GPIOA_IDR unused
+GPIOA_MODER 40020000
+
+Symbol: GPIOA_MODER
+   Definitions
+      At line 7 in file GPIO.s
+   Uses
+      At line 37 in file GPIO.s
+Comment: GPIOA_MODER used once
+GPIOA_ODR 40020014
+
+Symbol: GPIOA_ODR
+   Definitions
+      At line 9 in file GPIO.s
+   Uses
+      At line 190 in file GPIO.s
+      At line 202 in file GPIO.s
+      At line 273 in file GPIO.s
+
+GPIOB_IDR 40020410
+
+Symbol: GPIOB_IDR
+   Definitions
+      At line 13 in file GPIO.s
+   Uses
+      At line 63 in file GPIO.s
+      At line 80 in file GPIO.s
+      At line 112 in file GPIO.s
+      At line 143 in file GPIO.s
+      At line 174 in file GPIO.s
+      At line 230 in file GPIO.s
+
+GPIOB_MODER 40020400
+
+Symbol: GPIOB_MODER
+   Definitions
+      At line 12 in file GPIO.s
+   Uses
+      At line 43 in file GPIO.s
+Comment: GPIOB_MODER used once
+GPIOB_ODR 40020414
+
+Symbol: GPIOB_ODR
+   Definitions
+      At line 14 in file GPIO.s
+   Uses
+      At line 76 in file GPIO.s
+      At line 108 in file GPIO.s
+      At line 139 in file GPIO.s
+      At line 170 in file GPIO.s
+
+GPIOC_IDR 40020810
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: GPIOC_IDR
+   Definitions
+      At line 18 in file GPIO.s
+   Uses
+      None
+Comment: GPIOC_IDR unused
+GPIOC_MODER 40020800
+
+Symbol: GPIOC_MODER
+   Definitions
+      At line 17 in file GPIO.s
+   Uses
+      At line 49 in file GPIO.s
+Comment: GPIOC_MODER used once
+GPIOC_ODR 40020814
+
+Symbol: GPIOC_ODR
+   Definitions
+      At line 19 in file GPIO.s
+   Uses
+      At line 278 in file GPIO.s
+Comment: GPIOC_ODR used once
+RCC_AHB1ENR 40023830
+
+Symbol: RCC_AHB1ENR
+   Definitions
+      At line 4 in file GPIO.s
+   Uses
+      At line 32 in file GPIO.s
+Comment: RCC_AHB1ENR used once
+10 symbols
+362 symbols in table
