@@ -11,5 +11,6 @@ This repo contains the materials and projects of the Microprocessor & Assembly C
 | [*Project#4/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-4) | Frequency meter simulation in Proteus.|
 | [*Project#5/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-5) | ARM assembly basic programs.|
 | [*Project#6/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-6) | Elevator simulation in Proteus.|
+| [*Project#7/*](https://github.com/mohammadhashemii/Microprocessors_Assembly_Course/tree/master/Project-7) | Serial communication using UARTs.|
 
 
